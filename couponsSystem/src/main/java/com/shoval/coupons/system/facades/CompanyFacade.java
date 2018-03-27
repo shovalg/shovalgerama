@@ -1,42 +1,57 @@
 package com.shoval.coupons.system.facades;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.shoval.coupons.system.dbdao.CompanyDBDAO;
 import com.shoval.coupons.system.dbdao.CouponDBDAO;
+import com.shoval.coupons.system.exceptions.CompanyExistException;
 import com.shoval.coupons.system.exceptions.CouponExistException;
+import com.shoval.coupons.system.exceptions.CouponNotExistException;
+import com.shoval.coupons.system.exceptions.LoginException;
+import com.shoval.coupons.system.tables.Company;
 import com.shoval.coupons.system.tables.Coupon;
 import com.shoval.coupons.system.tables.CouponType;
 
 @Component
 public class CompanyFacade implements CouponClientFacade{
 
-	private CompanyDBDAO companyDB;
-	private CouponDBDAO couponDB;
+	@Autowired
+	CompanyDBDAO companyDB;
+	@Autowired
+	CouponDBDAO couponDB;
+	
 	public CompanyFacade() 
 	{
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
 	public void createCoupon(Coupon coupon)
-	{		
-		for (Coupon companyCoupon : companyDB.getCoupons()) 
+	{	
+		if(couponDB.couponExistsByTitle(coupon.getTitle()))
 		{
-			if(companyCoupon.getTitle().equals(coupon.getTitle()))
-			{
-				throw new CouponExistException("A coupon with the same title is already exist!");
-			}
+			throw new CouponExistException("A coupon with the same title is already exist!");
 		}
-		companyDB.getCoupons().add(coupon);
+		Company connectedCompany = companyDB.getConnectedCompany();
+		couponDB.createCoupon(coupon);
+		Collection<Coupon> coupons = companyDB.getCoupons();
+		coupons.add(coupon);
+		connectedCompany.setCoupons(coupons);
+		companyDB.updateCompany(connectedCompany);
 	}
 	
-	//needed to be tested
 	public void removeCoupon(Coupon coupon)
 	{
+		Company connectedCompany = companyDB.getConnectedCompany();
 		couponDB.removeCoupon(coupon);
+		Collection<Coupon> coupons = companyDB.getCoupons();
+		coupons.remove(coupon);
+		connectedCompany.setCoupons(coupons);
+		companyDB.updateCompany(connectedCompany);
 	}
 	
 	public void updateCoupon(Coupon coupon)
@@ -48,10 +63,10 @@ public class CompanyFacade implements CouponClientFacade{
 	
 	public Coupon getCoupon(long id)
 	{
-		return companyDB.getCoupons().get((int)id);
+		return couponDB.getCoupon(id);
 	}
 	
-	public ArrayList<Coupon> getAllCoupons()
+	public Collection<Coupon> getAllCoupons()
 	{
 		return companyDB.getCoupons();
 		
@@ -59,37 +74,36 @@ public class CompanyFacade implements CouponClientFacade{
 	
 	public ArrayList<Coupon> getCouponsByType(CouponType type)
 	{
-//		ArrayList<Coupon> couponsByType = new ArrayList<>();
-//		for (Coupon couponByType : couponDB.getCouponsByType(type)) 
-//		{
-//			if(this.getAllCoupons().contains(couponByType))
-//			{
-//				couponsByType.add(couponByType);
-//			}
-//		}
-//		return couponsByType;
 		return companyDB.getCouponsByType(type);
 	}
 	
-	public ArrayList<Coupon> getCouponsByPrice(Double price)
+	public ArrayList<Coupon> getCouponsByPrice(double price)
 	{
 		return companyDB.getCouponsByPrice(price);
 	}
 	
-	public ArrayList<Coupon> getCouponsByDate(Calendar date)
+	public ArrayList<Coupon> getCouponsByDate(Date date)
 	{
 		return companyDB.getCouponsByDate(date);
 	}
 	
+	public Coupon getCouponByTitle(String title)
+	{
+		if(companyDB.getCouponByTitle(title) == null)
+		{
+			throw new CouponNotExistException("Coupon is not exist!");
+		}
+		return companyDB.getCouponByTitle(title);
+	}
+	
 	@Override
 	public CouponClientFacade login(String name, String password)
-	{
-		this.companyDB = new CompanyDBDAO();
+	{	
 		if(this.companyDB.login(name, password))
 		{
 			return this;
 		}
-		return null;
+		throw new LoginException("Company name don't exist or Wrong password!");
 	}
 
 }

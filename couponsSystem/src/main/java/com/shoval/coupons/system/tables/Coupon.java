@@ -1,7 +1,7 @@
 package com.shoval.coupons.system.tables;
 
 
-import java.util.Calendar;
+
 import java.util.Collection;
 import java.util.Date;
 
@@ -29,9 +29,9 @@ public class Coupon {
 	@Column(name="start_date")
 	private Date start_date ;
 	@Column(name="end_date")
-	private Calendar end_date;
+	private Date end_date;
 	@Column(name="amount")
-	private Integer amount;
+	private int amount;
 	@Column(name="type")
 	@Enumerated (EnumType.STRING)
 	private CouponType type;
@@ -48,12 +48,17 @@ public class Coupon {
 			   inverseJoinColumns = @JoinColumn(name = "customer_id"))
 	private Collection<Customer> customers;
 	
-	public Coupon(String title, Date start_date, Calendar end_date, Integer amount,
+	public Coupon() 
+	{
+		super();
+	}
+	
+	public Coupon(String title, Date end_date, int amount,
 				  CouponType type, String message,double price, String image) 
 	{
 		super();
 		this.title = title;
-		this.start_date = start_date;
+		this.start_date = new Date();
 		this.end_date = end_date;
 		this.amount = amount;
 		this.type = type;
@@ -86,11 +91,11 @@ public class Coupon {
 		this.start_date = start_date;
 	}
 
-	public Calendar getEnd_date() {
+	public Date getEnd_date() {
 		return end_date;
 	}
 
-	public void setEnd_date(Calendar end_date) {
+	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
 	}
 

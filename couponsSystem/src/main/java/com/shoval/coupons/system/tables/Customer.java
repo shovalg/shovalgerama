@@ -30,7 +30,13 @@ public class Customer {
 			   inverseJoinColumns = @JoinColumn(name = "coupon_id"))
 	private Collection<Coupon> coupons;
 	
-	public Customer(String name, String password) {
+	public Customer()
+	{
+		super();
+	}
+	
+	public Customer(String name, String password)
+	{
 		super();
 		this.name = name;
 		this.password = password;

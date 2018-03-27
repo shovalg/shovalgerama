@@ -1,46 +1,69 @@
 package com.shoval.coupons.system.entrance;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.shoval.coupons.system.daily_thread.DailyCouponExpirationTask;
 import com.shoval.coupons.system.facades.AdminFacade;
 import com.shoval.coupons.system.facades.ClientType;
 import com.shoval.coupons.system.facades.CompanyFacade;
 import com.shoval.coupons.system.facades.CouponClientFacade;
 import com.shoval.coupons.system.facades.CustomerFacade;
-
+/**
+ * This class is the main class of the coupon system application.
+ * @author Shoval_G
+ * @category CouponSystem - entrance to application
+ * @version 1.0
+ */
 @Component
 public class CouponSystem{
 
-	private static CouponSystem _INSTANCE = null;
+	@Autowired
+	AdminFacade adminFacade;
+	@Autowired
+	CompanyFacade companyFacade;
+	@Autowired
+	CustomerFacade customerFacade;
+	@Autowired
+	ApplicationContext ctx;
 	
-	private CouponSystem() 
+	private boolean login = true;
+	/**
+	 * <br>Constructs and initializes a daily thread.</br>
+	 * A daily thread is used for clearing an expired coupons in the system DB
+	 */
+	public CouponSystem() 
 	{
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
-	public synchronized static CouponSystem getInstance()
-	{
-		if(_INSTANCE == null)
-		{
-			_INSTANCE = new CouponSystem();
-		}
-		return _INSTANCE;
-	}
-
-	
+	/**
+	 * This function is responsible for login by user type.
+	 * <br>There are three types of users: administrator = "admin", company and customer.</br>
+	 * If there is no match, the function will return null.
+	 * @param name user name
+	 * @param password user password
+	 * @param type user type
+	 * @return CouponClientFacade
+	 */
 	public CouponClientFacade login(String name, String password, ClientType type)
 	{
+		if(this.login)
+		{
+			DailyCouponExpirationTask threadCode = new DailyCouponExpirationTask(ctx);
+			Thread t = new Thread(threadCode);
+			t.start();
+			this.login = false;
+		}
 		switch (type) 
 		{
 		case ADMIN:
-			AdminFacade userAdmin = new AdminFacade();
-			return userAdmin.login(name, password);
+			return adminFacade.login(name, password);
 		case COMPANY:
-			CompanyFacade userCompany = new CompanyFacade(); 
-			return userCompany.login(name, password); 
+			return companyFacade.login(name, password); 
 		case CUSTOMER:
-			CustomerFacade userCustomer = new CustomerFacade();
-			return userCustomer.login(name, password);
+			return customerFacade.login(name, password);
 		}
 		return null;
 	}

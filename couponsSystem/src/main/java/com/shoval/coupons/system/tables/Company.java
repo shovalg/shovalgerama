@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity(name="COMPANY")
@@ -30,7 +28,13 @@ public class Company {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id")
 	private Collection<Coupon> coupons;
+//	private ArrayList<Coupon> coupons;
 
+	public Company() 
+	{
+		super();
+	}
+	
 	public Company(String name, String password, String email) {
 		super();
 		this.name = name;

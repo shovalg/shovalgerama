@@ -2,11 +2,14 @@ package com.shoval.coupons.system.dbdao;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.shoval.coupons.system.connections.ConnectionPool;
+import com.shoval.coupons.system.connections.SyncObject;
 import com.shoval.coupons.system.dao.CompanyDAO;
 import com.shoval.coupons.system.exceptions.LoginException;
 import com.shoval.coupons.system.tables.Company;
@@ -26,48 +29,127 @@ public class CompanyDBDAO implements CompanyDAO{
 	
 	public CompanyDBDAO() 
 	{
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
 	@Override
 	public void createCompany(Company company) 
 	{
-		companyRepo.save(company);	
+		SyncObject syncObject;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			companyRepo.save(company);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void removeCompany(Company company) 
 	{
-		companyRepo.delete(company.getId());	
+		SyncObject syncObject;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			companyRepo.delete(company.getId());
+			ConnectionPool.getInstance().returnConnection(syncObject);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}	
 	}
 
 	@Override
 	public void updateCompany(Company company)
 	{
-		companyRepo.save(company);	
+		SyncObject syncObject;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			companyRepo.save(company);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public Company getCompany(long id)
 	{
-		return companyRepo.findOne(id);
+		SyncObject syncObject;
+		Company company;
+		try
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			company = companyRepo.findOne(id);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return company;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public ArrayList<Company> getAllCompanies() 
 	{
-		return (ArrayList<Company>) companyRepo.findAll();
+		SyncObject syncObject;
+		ArrayList<Company> allCompanies;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			allCompanies = (ArrayList<Company>) companyRepo.findAll();
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return allCompanies;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
-	public ArrayList<Coupon> getCoupons() 
+	public Collection<Coupon> getCoupons() 
 	{
-		Company company = this.getCompany(this.connectedId);
-		return (ArrayList<Coupon>) company.getCoupons();
+		//Company company = this.getCompany(this.connectedId);
+		return this.getConnectedCompany().getCoupons();
+	}
+	
+	public Company getConnectedCompany()
+	{
+		Company connectedCompany = this.getCompany(this.connectedId);
+		return connectedCompany;
 	}
 	
 	public Coupon getCouponByTitle(String title)
 	{
+		SyncObject syncObject;
+		Coupon coupon;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			coupon = companyRepo.getCouponByTitle(connectedId, title);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return coupon;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+//	public Coupon getCouponByTitle(String title)
+//	{
 //		Company company = this.getCompany(this.connectedId);
 //		for (Coupon companyCoupon : company.getCoupons()) 
 //		{
@@ -82,41 +164,114 @@ public class CompanyDBDAO implements CompanyDAO{
 //		{
 //			throw new CouponNotExistException("Coupon not exist!");
 //		}
-		return null;//companyCoupon;
+//		return ;//companyCoupon;
+//	}
+	
+	public Company getCompanyByName(String name)
+	{
+		SyncObject syncObject;
+		Company company;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			company = companyRepo.findCompanyByName(name);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return company;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public ArrayList<Coupon> getCouponsByType(CouponType type) 
 	{
-		return null;//(ArrayList<Coupon>) couponRepo.findCouponsByTypeAndCompany_id(type, this.connectedId);
+		SyncObject syncObject;
+		ArrayList<Coupon> couponsByType;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			couponsByType = (ArrayList<Coupon>) companyRepo.getCouponsByType(this.connectedId, type);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return couponsByType;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	public ArrayList<Coupon> getCouponsByPrice(Double price) 
+	public ArrayList<Coupon> getCouponsByPrice(double price) 
 	{
-		return null;//(ArrayList<Coupon>) couponRepo.getCompanyCouponsByMaxPrice(connectedId, price);
+		SyncObject syncObject;
+		ArrayList<Coupon> couponsByPrice;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			couponsByPrice = (ArrayList<Coupon>) companyRepo.getCouponsByPrice(this.connectedId, price);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return couponsByPrice;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
-	public ArrayList<Coupon> getCouponsByDate(Calendar date) 
+	public ArrayList<Coupon> getCouponsByDate(Date date) 
 	{
-		return null;//(ArrayList<Coupon>) couponRepo.findCouponsIsLessThanEqualDateAndCompany_id(date, this.connectedId);
+		SyncObject syncObject;
+		ArrayList<Coupon> couponsByDate;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			couponsByDate = (ArrayList<Coupon>) companyRepo.getCouponsByDate(connectedId, date);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return couponsByDate;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public boolean companyExistsByName(String name)
+	{
+		SyncObject syncObject;
+		boolean companyExist;
+		try 
+		{
+			syncObject = ConnectionPool.getInstance().getConnection();
+			companyExist = companyRepo.existsByName(name);
+			ConnectionPool.getInstance().returnConnection(syncObject);
+			return companyExist;
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	@Override
 	public boolean login(String companyName, String password)
 	{	
-		if(!companyRepo.existsByName(companyName))
+		if(!this.companyExistsByName(companyName))
 		{
-			throw new LoginException("Company don't exist!");
+			return false;
 		}
-		if (companyRepo.findCompanyByName(companyName).getPassword().equals(password)) 
+		if (this.getCompanyByName(companyName).getPassword().equals(password)) 
 		{
-			connectedId = companyRepo.findCompanyByName(companyName).getId();
+			connectedId = this.getCompanyByName(companyName).getId();
 			return true;
 		}
 		else
 		{
-			throw new LoginException("Wrong password!");
+			return false;
 		}
 	}
-
-
 }

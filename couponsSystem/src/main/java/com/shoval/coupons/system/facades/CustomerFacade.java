@@ -1,21 +1,26 @@
 package com.shoval.coupons.system.facades;
 
-import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.shoval.coupons.system.dbdao.CouponDBDAO;
 import com.shoval.coupons.system.dbdao.CustomerDBDAO;
+import com.shoval.coupons.system.exceptions.LoginException;
 import com.shoval.coupons.system.exceptions.PurchaseCouponException;
 import com.shoval.coupons.system.tables.Coupon;
 import com.shoval.coupons.system.tables.CouponType;
+import com.shoval.coupons.system.tables.Customer;
 
 @Component
 public class CustomerFacade implements CouponClientFacade{
 
-	private CustomerDBDAO customerDB;
-	private CouponDBDAO couponDB;
+	@Autowired
+	CustomerDBDAO customerDB;
+	@Autowired
+	CouponDBDAO couponDB;
 	
 	public CustomerFacade() 
 	{
@@ -25,61 +30,60 @@ public class CustomerFacade implements CouponClientFacade{
 	//consider to replace runtime exception to checked exception
 	public void purchaseCoupon(Coupon coupon)
 	{
-		if(this.customerDB.getCoupons().contains(coupon))
+		Customer customerFromDB = customerDB.getConnectedCustomer();
+		if(customerDB.getCouponByTitle(coupon.getTitle()) != null)
 		{
 			throw new PurchaseCouponException("This coupon is already exist!");
 		}
-		int amount = this.couponDB.getCoupon(coupon.getId()).getAmount();
+		int amount = couponDB.getCoupon(coupon.getId()).getAmount();
 		if(amount == 0)
 		{
 			throw new PurchaseCouponException("Coupon is run out!");
 		}
 		Date today = new Date();
-		Calendar endDate = Calendar.getInstance();
-		endDate = this.couponDB.getCoupon(coupon.getId()).getEnd_date();
+		Date endDate = this.couponDB.getCoupon(coupon.getId()).getEnd_date();
 		if(endDate.before(today))
 		{
 			throw new PurchaseCouponException("Coupon is expired!");
 		}
-		this.customerDB.getCoupons().add(coupon);
-		amount -= 1;
-		this.couponDB.getCoupon(coupon.getId()).setAmount(amount);//need to add update coupon and getId to ByName
+		Collection<Coupon> purchaseCoupon = customerFromDB.getCoupons(); //customerDB.getCoupons();
+		Coupon couponFromDB = couponDB.getCouponByTitle(coupon.getTitle());
+		purchaseCoupon.add(couponFromDB);
+		amount--;
+		couponFromDB.setAmount(amount);
+//		couponFromDB.setAmount(couponFromDB.getAmount()-1);
+		couponDB.updateCoupon(couponFromDB);
+		customerDB.updateCustomer(customerFromDB);
 	}
 	
-	//In part B of project - replace print with httpResponse
-	public void getAllPurchasedCoupons()
+	public Collection<Coupon> getAllPurchasedCoupons()
 	{
-		for (Coupon customerCoupon : this.customerDB.getCoupons())
-		{
-			System.out.println(customerCoupon);
-		}
+		return this.customerDB.getCoupons();
 	}
 	
-	public void getAllPurchasedCouponsByType(CouponType type)
+	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type)
 	{
-		for (Coupon customerCoupon : this.customerDB.getCouponsByType(type)) 
-		{
-			System.out.println(customerCoupon);
-		}
+		return this.customerDB.getCouponsByType(type); 
 	}
 	
-	public void getAllPurchasedCouponsByPrice(Double price)
+	public Collection<Coupon> getAllPurchasedCouponsByPrice(double price)
 	{
-		for (Coupon customerCoupon : this.customerDB.getCouponsByPrice(price)) 
-		{
-			System.out.println(customerCoupon);
-		}
+		return this.customerDB.getCouponsByPrice(price); 
 	}
 	
+	public Coupon getCouponByTitle(String title)
+	{
+		return customerDB.getCouponByTitle(title);
+	}
+		
 	@Override
 	public CouponClientFacade login(String name, String password)
 	{
-		this.customerDB = new CustomerDBDAO();
 		if(this.customerDB.login(name, password))
 		{
 			return this;
 		}
-		return null;
+		throw new LoginException("Customer name don't exist or Wrong password!");
 	}
 
 }
