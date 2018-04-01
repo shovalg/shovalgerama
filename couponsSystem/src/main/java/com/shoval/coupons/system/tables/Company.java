@@ -12,6 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+/**
+ * This table entity (COMPANY) represent the fields of object Company in the database.
+ * <br>The Company table is connected to the Coupon table by one to many relation.</br>
+ * @author Shoval_G
+ * @version 1.0
+ * @category Company table
+ */
 @Entity(name="COMPANY")
 public class Company {
 	
@@ -28,13 +35,21 @@ public class Company {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id")
 	private Collection<Coupon> coupons;
-//	private ArrayList<Coupon> coupons;
 
+	/**
+	 * Default constructor
+	 */
 	public Company() 
 	{
 		super();
 	}
 	
+	/**
+	 * Main constructor
+	 * @param name company name
+	 * @param password company password
+	 * @param email company email
+	 */
 	public Company(String name, String password, String email) {
 		super();
 		this.name = name;
@@ -42,51 +57,102 @@ public class Company {
 		this.email = email;
 	}
 
-	public long getId() {
+	/**
+	 * Get function that return the company's id.
+	 * @return long identifier of company's id.
+	 */
+	public long getId() 
+	{
 		return id;
 	}
 
-	public void setId(long id) {
+	/**
+	 * Set function for changing company's id.
+	 * @param id the new company's id.
+	 */
+	public void setId(long id) 
+	{
 		this.id = id;
 	}
 
-	public String getCompName() {
+	/**
+	 * Get function that return the company's name.
+	 * @return String identifier of company's name.
+	 */
+	public String getCompName() 
+	{
 		return name;
 	}
 
-	public void setCompName(String name) {
+	/**
+	 * Set function for changing company's name.
+	 * @param name the new company's name.
+	 */
+	public void setCompName(String name) 
+	{
 		this.name = name;
 	}
 
-	public String getPassword() {
+	/**
+	 * Get function that return the company's password.
+	 * @return String identifier of company's password.
+	 */
+	public String getPassword() 
+	{
 		return password;
 	}
 
-	public void setPassword(String password) {
+	/**
+	 * Set function for changing company's password.
+	 * @param password the new company's password.
+	 */
+	public void setPassword(String password) 
+	{
 		this.password = password;
 	}
 
-	public String getEmail() {
+	/**
+	 * Get function that return the company's email.
+	 * @return String identifier of company's email.
+	 */
+	public String getEmail() 
+	{
 		return email;
 	}
 
+	/**
+	 * Set function for changing company's email.
+	 * @param email the new company's email.
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 	
+	/**
+	 * Get function that return the company's coupons.
+	 * @return Collection of the company's Coupons objects.
+	 */
 	public Collection<Coupon> getCoupons() 
 	{
 		return coupons;
 	}
 
+	/**
+	 * Set function for changing company's coupons.
+	 * @param coupons the new company's Coupons objects.
+	 */
 	public void setCoupons(Collection<Coupon> coupons) 
 	{
 		this.coupons = coupons;
 	}
 
+	/**
+	 * This function presents all the company's details.
+	 * @return String with all the company's details.
+	 */
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return "Company [id=" + id + ", comp_name=" + name + ", password=" + password + ", email=" + email + "]";
 	}
-	
 }

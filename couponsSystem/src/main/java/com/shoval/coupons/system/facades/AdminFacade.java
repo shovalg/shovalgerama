@@ -1,7 +1,5 @@
 package com.shoval.coupons.system.facades;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +18,7 @@ import com.shoval.coupons.system.tables.Customer;
  * <br>Each one of this classes is responsible for all the logic behind an end user type.</br>
  * This class is responsible for administrator user type.
  * @author Shoval_G
+ * @version 1.0
  * @category AdminFacade
  */
 @Component
@@ -31,7 +30,7 @@ public class AdminFacade implements CouponClientFacade{
 	CustomerDBDAO customerDBDAO;
 	
 	/**
-	 * Default constructor - AdminFacade
+	 * Default constructor.
 	 */
 	public AdminFacade() 
 	{
@@ -39,27 +38,26 @@ public class AdminFacade implements CouponClientFacade{
 	}
 	
 	/**
-	 * <br>This function is responsible for creating a company and save it in the DB</br>
-	 * The function blocks the option to create two companies with the same name description
-	 * @param company company object which receive from user administrator and will be saved in the DB. 
-	 * @throws InterruptedException 
-	 * @throws CompanyExistException thrown in case of creating a company with name description that already exist in the DB.
+	 * This function is responsible for creating a company and save it in the database.
+	 * <br>The function blocks the option to create two companies with the same name description.</br>
+	 * @param company object received from user administrator and will be saved in the database. 
+	 * @throws CompanyExistException thrown in case of creating a company with name description that already exist in the database.
 	 */
 	public void createCompany(Company company)
 	{
 		if(companyDBDAO.getCompanyByName(company.getCompName()) != null)
 		{
-			throw new CompanyExistException("Company name is already exist. Please change company's name!");
+			throw new CompanyExistException("Company name, " + company.getCompName() + " is already exist. Please change company's name!");
 		}
 		companyDBDAO.createCompany(company);
 	}
 	
 	/**
-	 * This function is responsible for deleting a company from the DB.
+	 * This function is responsible for deleting a company from the database.
 	 * <br>The function alerts if the user is trying to delete a company that doesn't exist.</br>
-	 * A company that doesn't exist is such that it's name description doesn't exist in the DB.
-	 * @param company company object which receive from user administrator and will be deleted from the DB.
-	 * @throws CompanyNotExistException thrown in case of deleting a company with name description that don't exist in the DB.
+	 * A company that doesn't exist is such that it's name description doesn't exist in the database.
+	 * @param company object received from user administrator and will be deleted from the database.
+	 * @throws CompanyNotExistException thrown in case of deleting a company with name description that don't exist in the database.
 	 */
 	public void removeCompany(Company company)
 	{
@@ -69,19 +67,16 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CompanyNotExistException("Company don't exist!");
+			throw new CompanyNotExistException("Company " + company.getCompName() + " don't exist!");
 		}
-		//Company companyFromDB = companyDBDAO.getCompanyByName(comq6` pany.getCompName());
-		//companyFromDB.getCoupons().clear();
-		//companyFromDB.setCoupons(companyFromDB.getCoupons());
 	}
 
 	/**
-	 * This function is responsible for updating a company from the DB.
+	 * This function is responsible for updating a company from the database.
 	 * <br>The function alerts if the user is trying to update a company that doesn't exist.</br>
-	 * A company that doesn't exist is such that it's name description doesn't exist in the DB.
-	 * @param company company object which receive from user administrator. the password and email which are the object's variables will be update.
-	 * @throws CompanyNotExistException thrown in case of updating a company with name description that don't exist in the DB.
+	 * A company that doesn't exist is such that it's name description doesn't exist in the database.
+	 * @param company object which receive from user administrator. the password and email which are the object's variables will be update.
+	 * @throws CompanyNotExistException thrown in case of updating a company with name description that don't exist in the database.
 	 */
 	public void updateCompany(Company company)
 	{
@@ -94,15 +89,15 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CompanyNotExistException("Company don't exist!");
+			throw new CompanyNotExistException("Company "  + company.getCompName() + " don't exist!");
 		}
 	}
 	
 	/**
-	 * This function is responsible for getting a company from the DB.
-	 * @param id id parameter is the PK for the company object stored in the DB.
-	 * @return the company object stored in the DB which match the specified id parameter.
-	 * @throws CompanyNotExistException thrown in case of null value in company object that received from the DB.
+	 * This function is responsible for getting a company from the database.
+	 * @param id parameter is the PK for the Company object stored in the database.
+	 * @return the Company object stored in the database which match the specified id parameter.
+	 * @throws CompanyNotExistException thrown in case of null value in Company object that received from the database.
 	 */
 	public Company getCompany(long id)
 	{
@@ -118,35 +113,35 @@ public class AdminFacade implements CouponClientFacade{
 	}
 	
 	/**
-	 * This function is responsible for getting a all companies from the DB.
-	 * @return Collection of companies objects stored in the DB.
+	 * This function is responsible for getting a all companies from the database.
+	 * @return Iterable of companies objects stored in the database.
 	 */
-	public Collection<Company> getAllCompanies()
+	public Iterable<Company> getAllCompanies()
 	{
 		return companyDBDAO.getAllCompanies();
 	}
 	
 	/**
-	 * <br>This function is responsible for creating a customer and save it in the DB</br>
-	 * The function blocks the option to create two customers with the same name description
-	 * @param customer customer object which receive from user administrator and will be saved in the DB. 
-	 * @throws CustomerExistException thrown in case of creating a customer with name description that already exist in the DB.
+	 * This function is responsible for creating a customer and save it in the database.
+	 * <br>The function blocks the option to create two customers with the same name description.</br>
+	 * @param customer object which receive from user administrator and will be saved in the database. 
+	 * @throws CustomerExistException thrown in case of creating a customer with name description that already exist in the database.
 	 */
 	public void createCustomer(Customer customer)
 	{
 		if(customerDBDAO.getCustomerByName(customer.getCust_name()) != null)
 		{
-			throw new CustomerExistException("Customer name is already exist. Please change customer's name!");
+			throw new CustomerExistException("Customer name, " + customer.getCust_name() + " is already exist. Please change customer's name!");
 		}
 		customerDBDAO.createCustomer(customer);
 	}
 	
 	/**
-	 * This function is responsible for deleting a customer from the DB.
+	 * This function is responsible for deleting a customer from the database.
 	 * <br>The function alerts if the user is trying to delete a customer that doesn't exist.</br>
-	 * A customer that doesn't exist is such that it's name description doesn't exist in the DB.
-	 * @param customer customer object which receive from user administrator and will be deleted from the DB.
-	 * @throws CustomerNotExistException thrown in case of deleting a customer with name description that don't exist in the DB.
+	 * A customer that doesn't exist is such that it's name description doesn't exist in the database.
+	 * @param customer object which receive from user administrator and will be deleted from the database.
+	 * @throws CustomerNotExistException thrown in case of deleting a customer with name description that don't exist in the database.
 	 */
 	public void removeCustomer(Customer customer)
 	{
@@ -156,16 +151,16 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CustomerNotExistException("Customer don't exist!");
+			throw new CustomerNotExistException("Customer " + customer.getCust_name() + " don't exist!");
 		}
 	}
 	
 	/**
-	 * This function is responsible for updating a customer from the DB.
+	 * This function is responsible for updating a customer from the database.
 	 * <br>The function alerts if the user is trying to update a customer that doesn't exist.</br>
-	 * A customer that doesn't exist is such that it's name description doesn't exist in the DB.
-	 * @param customer customer object which receive from user administrator. the password which is the object's variable will be update.
-	 * @throws CustomerNotExistException thrown in case of updating a customer with name description that don't exist in the DB.
+	 * A customer that doesn't exist is such that it's name description doesn't exist in the database.
+	 * @param customer object which receive from user administrator. the password which is the object's variable will be update.
+	 * @throws CustomerNotExistException thrown in case of updating a customer with name description that don't exist in the database.
 	 */
 	public void updateCustomer(Customer customer)
 	{
@@ -177,15 +172,15 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CustomerNotExistException("Customer don't exist!");
+			throw new CustomerNotExistException("Customer " + customer.getCust_name() + " don't exist!");
 		}
 	}
 	
 	/**
-	 * This function is responsible for getting a customer from the DB.
-	 * @param id id parameter is the PK for the customer object stored in the DB.
-	 * @return the customer object stored in the DB which match the specified id parameter.
-	 * @throws CustomerNotExistException thrown in case of null value in customer object that received from the DB.
+	 * This function is responsible for getting a customer from the database.
+	 * @param id parameter is the PK for the Customer object stored in the database.
+	 * @return the Customer object stored in the database which match the specified id parameter.
+	 * @throws CustomerNotExistException thrown in case of null value in Customer object that received from the database.
 	 */
 	public Customer getCustomer(long id)
 	{
@@ -201,19 +196,20 @@ public class AdminFacade implements CouponClientFacade{
 	}
 	
 	/**
-	 * This function is responsible for getting a all customers from the DB.
-	 * @return Collection of customers objects stored in the DB.
+	 * This function is responsible for getting a all customers from the database.
+	 * @return Iterable of customers objects stored in the database.
 	 */
-	public Collection<Customer> getAllCustomers()
+	public Iterable<Customer> getAllCustomers()
 	{
 		return customerDBDAO.getAllCustomers();
 	}
 	
-	/**{@inheritDoc}
-	 * <p>This function is used for administrator user type login</p>
-	 * 
+	/**
+	 * This function is responsible for getting a company from the database by a given name.
+	 * @param name of the requested Company object.
+	 * @return the Company object stored in the database which match the specified name parameter.
+	 * @throws CompanyNotExistException thrown in case of null value in Customer object that received from the database.
 	 */
-	
 	public Company getCompanyByName(String name)
 	{
 		Company company = companyDBDAO.getCompanyByName(name);
@@ -223,10 +219,16 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CompanyNotExistException("Company don't exist!");
+			throw new CompanyNotExistException("Company " + name + " don't exist!");
 		}
 	}
 	
+	/**
+	 * This function is responsible for getting a customer from the database by a given name.
+	 * @param name of the requested Customer object.
+	 * @return the Customer object stored in the database which match the specified name parameter.
+	 * @throws CustomerNotExistException thrown in case of null value in Customer object that received from the database.
+	 */
 	public Customer getCustomerByName(String name)
 	{
 		Customer customer = customerDBDAO.getCustomerByName(name);
@@ -236,10 +238,14 @@ public class AdminFacade implements CouponClientFacade{
 		}
 		else
 		{
-			throw new CustomerNotExistException("Customer don't exist!");
+			throw new CustomerNotExistException("Customer " + name + " don't exist!");
 		}
 	}
 
+	/**{@inheritDoc}
+	 * <p>This function is used for administrator user type login.</p>
+	 * @throws LoginException indicates about wrong name or password typo.
+	 */
 	@Override
 	public CouponClientFacade login(String name, String password)
 	{

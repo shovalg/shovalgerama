@@ -44,7 +44,7 @@ import com.shoval.coupons.system.tables.Customer;
 
 /**
  * This class tests all the facades methods including the exceptions in every method.
- * @author Shoval Gerama
+ * @author Shoval_G
  * @version 1.0
  * @category CouponsSystemApplicationTests class
  */

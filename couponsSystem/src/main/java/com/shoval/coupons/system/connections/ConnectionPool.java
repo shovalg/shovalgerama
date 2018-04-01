@@ -10,6 +10,7 @@ import com.shoval.coupons.system.exceptions.SystemShutDownException;
  * <br>This class is responsible for the limitation of DB entrances.</br>
  * The maximum is five entrances
  * @author Shoval_G
+ * @version 1.0
  * @category ConnectionPool
  */
 @Component
@@ -44,13 +45,17 @@ public class ConnectionPool {
 		return _INSTANCE;
 	}
 	
+	/**
+	 * This function returns a boolean attribute which indicates whether the system is in shutdown mode.
+	 * @return Boolean equals true if the system is shutting down and false otherwise.
+	 */
 	public boolean isSHUTDOWN() 
 	{
 		return this.SHUTDOWN;
 	}
 
 	/**
-	 * <br>This function is responsible for giving one DB connection.<br>
+	 * <br>This function is responsible for giving one DB connection in a synchronize manner.<br>
 	 * When a connection is given there is a subtraction of one connection from connections (ArrayList) pool.
 	 * @return connection - DB connection.
 	 * @throws InterruptedException
@@ -75,7 +80,7 @@ public class ConnectionPool {
 	}
 	
 	/**
-	 * <br>This function is responsible for returning one DB connection.<br>
+	 * <br>This function is responsible for returning one DB connection in a synchronize manner.<br>
 	 * When a connection is returned it is added to the connections (ArrayList) pool.
 	 * @param connection - one connection from connections (ArrayList) pool.
 	 */
@@ -86,14 +91,21 @@ public class ConnectionPool {
 		notify();
 	}
 	
-	public void shutdown()
+	/**
+	 * <br>This function will be called from the CouponSystem class when a shutdown request is committed.</br>
+	 * Then, the ConnectionPool will be closed and all the connections will be removed.
+	 * @return Boolean equals true if all the connections has been removed, and false otherwise.
+	 */
+	public boolean shutdown()
 	{
 		this.SHUTDOWN = true;
 		if(this.connections.size() == NUMBER_OF_CONNECTIONS)
 		{
 			this.connections.clear();
-			System.exit(0);
+			return true;
 		}
+		
+		System.out.println("System is shutting down!");
 		
 		try 
 		{
@@ -105,6 +117,6 @@ public class ConnectionPool {
 		}
 		
 		this.connections.clear();
-		System.exit(-1);
+		return false;
 	}
 }

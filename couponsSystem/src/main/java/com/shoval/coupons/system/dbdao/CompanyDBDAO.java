@@ -1,7 +1,6 @@
 package com.shoval.coupons.system.dbdao;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -11,13 +10,21 @@ import org.springframework.stereotype.Component;
 import com.shoval.coupons.system.connections.ConnectionPool;
 import com.shoval.coupons.system.connections.SyncObject;
 import com.shoval.coupons.system.dao.CompanyDAO;
-import com.shoval.coupons.system.exceptions.LoginException;
 import com.shoval.coupons.system.tables.Company;
 import com.shoval.coupons.system.tables.CompanyRepo;
 import com.shoval.coupons.system.tables.Coupon;
 import com.shoval.coupons.system.tables.CouponRepo;
 import com.shoval.coupons.system.tables.CouponType;
 
+/**
+ * This class implements CompanyDAO interface.
+ * <br>It lies between CompanyFacade class and CompanyRepo class as a mediator for read and write operations to the database.</br>
+ * This class use the CompanyRepo class for those operations.
+ * <br>All the functions that want to communicate with the database, get a SyncObject from the Connection pool and return it when finished.</br>
+ * @author Shoval_G
+ * @version 1.0
+ * @category CompanyDBDAO
+ */
 @Component
 public class CompanyDBDAO implements CompanyDAO{
 
@@ -27,11 +34,19 @@ public class CompanyDBDAO implements CompanyDAO{
 	@Autowired
 	CouponRepo couponRepo;
 	
+	/**
+	 * Default constructor.
+	 */
 	public CompanyDBDAO() 
 	{
 		super();
 	}
 	
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CompanyRepo class to save the given Company object to the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void createCompany(Company company) 
 	{
@@ -48,6 +63,11 @@ public class CompanyDBDAO implements CompanyDAO{
 		}
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CompanyRepo class to delete the given Company object from the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void removeCompany(Company company) 
 	{
@@ -64,6 +84,11 @@ public class CompanyDBDAO implements CompanyDAO{
 		}	
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CompanyRepo class to update (re-save) the given Company object to the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void updateCompany(Company company)
 	{
@@ -80,6 +105,11 @@ public class CompanyDBDAO implements CompanyDAO{
 		}
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CompanyRepo class to get a Company object from the database by a given id.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public Company getCompany(long id)
 	{
@@ -99,15 +129,20 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CompanyRepo class to get all Companies objects from the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
-	public ArrayList<Company> getAllCompanies() 
+	public Iterable<Company> getAllCompanies() 
 	{
 		SyncObject syncObject;
-		ArrayList<Company> allCompanies;
+		Iterable<Company> allCompanies;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			allCompanies = (ArrayList<Company>) companyRepo.findAll();
+			allCompanies = companyRepo.findAll();
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return allCompanies;
 		}
@@ -118,19 +153,34 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the getConnectedCompany function in order to receive the current connected company, and it's coupons.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished in an indirect manner (through getCompany function).
+	 */
 	@Override
 	public Collection<Coupon> getCoupons() 
 	{
-		//Company company = this.getCompany(this.connectedId);
 		return this.getConnectedCompany().getCoupons();
 	}
 	
+	/**
+	 * This function saves the Company object that successfully logged in.
+	 * @return Company object which is the connected Company.
+	 */
 	public Company getConnectedCompany()
 	{
 		Company connectedCompany = this.getCompany(this.connectedId);
 		return connectedCompany;
 	}
 	
+	/**
+	 * This function uses the CompanyRepo class to get coupon by a given title.
+	 * <br>The coupon belongs to the last company that successfully logged in.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 * @param title of the requested coupon. 
+	 * @return Coupon object with the requested coupon title.
+	 */
 	public Coupon getCouponByTitle(String title)
 	{
 		SyncObject syncObject;
@@ -148,25 +198,13 @@ public class CompanyDBDAO implements CompanyDAO{
 		}
 		return null;
 	}
-//	public Coupon getCouponByTitle(String title)
-//	{
-//		Company company = this.getCompany(this.connectedId);
-//		for (Coupon companyCoupon : company.getCoupons()) 
-//		{
-//			if(companyCoupon.getTitle().equals(couponRepo.getCouponByTitle(title)))
-//			{
-//				return couponRepo.getCouponByTitle(title);
-//			}
-//		}
-//		return null;
-//		Coupon companyCoupon = couponRepo.findCouponByTitleAndCompany_id(title, this.connectedId);
-//		if(companyCoupon == null)
-//		{
-//			throw new CouponNotExistException("Coupon not exist!");
-//		}
-//		return ;//companyCoupon;
-//	}
 	
+	/**
+	 * This function uses the CompanyRepo class to get company by a given name.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished.</br>
+	 * @param name of the requested company.
+	 * @return Company object with the requested company name.
+	 */
 	public Company getCompanyByName(String name)
 	{
 		SyncObject syncObject;
@@ -185,14 +223,21 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 	
-	public ArrayList<Coupon> getCouponsByType(CouponType type) 
+	/**
+	 * This function uses the CompanyRepo class to get coupons by a given type.
+	 * <br>The coupons belongs to the last company that successfully logged in.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 * @param type of the requested coupons.
+	 * @return Collection of coupons objects with the requested coupon type.
+	 */
+	public Collection<Coupon> getCouponsByType(CouponType type) 
 	{
 		SyncObject syncObject;
-		ArrayList<Coupon> couponsByType;
+		Collection<Coupon> couponsByType;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			couponsByType = (ArrayList<Coupon>) companyRepo.getCouponsByType(this.connectedId, type);
+			couponsByType = companyRepo.getCouponsByType(this.connectedId, type);
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return couponsByType;
 		}
@@ -203,14 +248,21 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 
-	public ArrayList<Coupon> getCouponsByPrice(double price) 
+	/**
+	 * This function uses the CompanyRepo class to get coupons whose price is lower or equal to the given price.
+	 * <br>The coupons belongs to the last company that successfully logged in.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 * @param price of the requested coupons.
+	 * @return Collection of Coupons objects with the requested coupon price.
+	 */
+	public Collection<Coupon> getCouponsByPrice(double price) 
 	{
 		SyncObject syncObject;
-		ArrayList<Coupon> couponsByPrice;
+		Collection<Coupon> couponsByPrice;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			couponsByPrice = (ArrayList<Coupon>) companyRepo.getCouponsByPrice(this.connectedId, price);
+			couponsByPrice = companyRepo.getCouponsByPrice(this.connectedId, price);
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return couponsByPrice;
 		}
@@ -221,14 +273,21 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 	
-	public ArrayList<Coupon> getCouponsByDate(Date date) 
+	/**
+	 * This function uses the CompanyRepo class to get coupons whose end date is before or equal to the given end date.
+	 * <br>The coupons belongs to the last company that successfully logged in.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 * @param date, end date of the requested coupons.
+	 * @return Collection of Coupons objects with the requested coupon end date.
+	 */
+	public Collection<Coupon> getCouponsByDate(Date date) 
 	{
 		SyncObject syncObject;
-		ArrayList<Coupon> couponsByDate;
+		Collection<Coupon> couponsByDate;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			couponsByDate = (ArrayList<Coupon>) companyRepo.getCouponsByDate(connectedId, date);
+			couponsByDate = companyRepo.getCouponsByDate(connectedId, date);
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return couponsByDate;
 		}
@@ -239,6 +298,12 @@ public class CompanyDBDAO implements CompanyDAO{
 		return null;
 	}
 	
+	/**
+	 * This function uses the CompanyRepo class to check if company exists in the database by a given name.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished.</br>
+	 * @param name of the requested company. 
+	 * @return boolean which indicates whether the requested Company object exists in the database.
+	 */
 	public boolean companyExistsByName(String name)
 	{
 		SyncObject syncObject;
@@ -257,6 +322,11 @@ public class CompanyDBDAO implements CompanyDAO{
 		return false;
 	}
 	
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * This function uses the CompanyRepo class (in an indirect manner) to check the given credentials (name and password) against the database records.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished in an indirect manner (through companyExistsByName and getCompanyByName functions).</br>
+	 */
 	@Override
 	public boolean login(String companyName, String password)
 	{	

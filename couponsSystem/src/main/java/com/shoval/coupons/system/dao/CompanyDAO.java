@@ -6,43 +6,50 @@ import com.shoval.coupons.system.tables.Company;
 import com.shoval.coupons.system.tables.Coupon;
 
 /**
- * 
+ * This interface is responsible for reading and writing to the Company table in the database.
  * @author Shoval_G
- *
+ * @version 1.0
+ * @category CompanyDAO interface
  */
 public interface CompanyDAO {
 
 	/**
-	 * 
-	 * @param company
-	 */
-	void createCompany(Company company);
-	/**
 	 * The function is abstract and responsible for creating a required company.
 	 * @param company to be created.
 	 */
+	void createCompany(Company company);
+	
+	/**
+	 * The function is abstract and responsible for removing a required company.
+	 * @param company to be removed.
+	 */
 	void removeCompany(Company company);
+	
 	/**
 	 * The function is abstract and responsible for updating a required company.
 	 * @param company to be updated.
 	 */
 	void updateCompany(Company company);
+	
 	/**
 	 * The function is abstract and responsible for getting a company from the DB by it's PK - id parameter.
-	 * @param id id parameter is the PK for the customer object stored in the DB.
+	 * @param id parameter is the PK for the company object stored in the DB.
 	 * @return Company
 	 */
 	Company getCompany(long id);
+	
 	/**
 	 * The function is abstract and responsible for getting all companies from the DB.
-	 * @return Collection of all companies to the company facade layer.
+	 * @return Iterable of all companies.
 	 */
-	Collection<Company> getAllCompanies();
+	Iterable<Company> getAllCompanies();
+	
 	/**
-	 * The function is abstract and responsible for getting all coupons from the DB.
-	 * @return Collection of all coupons to the company facade layer.
+	 * The function is abstract and responsible for getting all coupons of the current connected company from the DB.
+	 * @return Collection of all coupons of the current connected company.
 	 */
 	Collection<Coupon> getCoupons();
+	
 	/**
 	 * The function is abstract and its purpose is for login by user type company.
 	 * @param compName company's name

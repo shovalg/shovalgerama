@@ -10,11 +10,12 @@ import com.shoval.coupons.system.facades.ClientType;
 import com.shoval.coupons.system.facades.CompanyFacade;
 import com.shoval.coupons.system.facades.CouponClientFacade;
 import com.shoval.coupons.system.facades.CustomerFacade;
+
 /**
  * This class is the main class of the coupon system application.
  * @author Shoval_G
- * @category CouponSystem - entrance to application
  * @version 1.0
+ * @category CouponSystem - entrance to application
  */
 @Component
 public class CouponSystem{
@@ -29,9 +30,9 @@ public class CouponSystem{
 	ApplicationContext ctx;
 	
 	private boolean login = true;
+	
 	/**
-	 * <br>Constructs and initializes a daily thread.</br>
-	 * A daily thread is used for clearing an expired coupons in the system DB
+	 * Default constructor.
 	 */
 	public CouponSystem() 
 	{
@@ -42,6 +43,8 @@ public class CouponSystem{
 	 * This function is responsible for login by user type.
 	 * <br>There are three types of users: administrator = "admin", company and customer.</br>
 	 * If there is no match, the function will return null.
+	 * <p>This function Constructs and initializes a daily thread.</br>
+	 * A daily thread is used for clearing an expired coupons in the system database (also known as DB)</p>
 	 * @param name user name
 	 * @param password user password
 	 * @param type user type

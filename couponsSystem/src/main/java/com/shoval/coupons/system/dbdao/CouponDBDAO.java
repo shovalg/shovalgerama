@@ -1,10 +1,9 @@
 package com.shoval.coupons.system.dbdao;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.shoval.coupons.system.connections.ConnectionPool;
@@ -14,17 +13,34 @@ import com.shoval.coupons.system.tables.Coupon;
 import com.shoval.coupons.system.tables.CouponRepo;
 import com.shoval.coupons.system.tables.CouponType;
 
+/**
+ * This class implements CouponDAO interface.
+ * <br>Uses as a mediator for read and write operations to the database.</br>
+ * This class use the CouponRepo class for those operations.
+ * <br>All the functions that want to communicate with the database, get a SyncObject from the Connection pool and return it when finished.</br>
+ * @author Shoval_G
+ * @version 1.0
+ * @category CouponDBDAO
+ */
 @Component
 public class CouponDBDAO implements CouponDAO{
 
 	@Autowired
 	CouponRepo couponRepo;
-	
+
+	/**
+	 * Default constructor.
+	 */
 	public CouponDBDAO() 
 	{
 		super();
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CouponRepo class to save the given Coupon object to the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void createCoupon(Coupon coupon) 
 	{
@@ -41,6 +57,11 @@ public class CouponDBDAO implements CouponDAO{
 		}
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CouponRepo class to delete the given Coupon object from the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void removeCoupon(Coupon coupon) 
 	{
@@ -57,6 +78,11 @@ public class CouponDBDAO implements CouponDAO{
 		}	
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CouponRepo class to update (re-save) the given Coupon object to the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public void updateCoupon(Coupon coupon) 
 	{
@@ -73,6 +99,11 @@ public class CouponDBDAO implements CouponDAO{
 		}	
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CouponRepo class to get a Coupon object from the database by a given id.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
 	public Coupon getCoupon(long id) 
 	{
@@ -92,15 +123,20 @@ public class CouponDBDAO implements CouponDAO{
 		return null;
 	}
 
+	/**
+	 * <p>{@inheritDoc}</p>
+	 * <br>This function uses the CouponRepo class to get all Coupons objects from the database.</br>
+	 * This function get a SyncObject from the Connection pool and return it when finished.
+	 */
 	@Override
-	public ArrayList<Coupon> getAllCoupons() 
+	public Iterable<Coupon> getAllCoupons() 
 	{
 		SyncObject syncObject;
-		ArrayList<Coupon> allCoupons;
+		Iterable<Coupon> allCoupons;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			allCoupons = (ArrayList<Coupon>) couponRepo.findAll();
+			allCoupons = couponRepo.findAll();
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return allCoupons;
 		} 
@@ -111,15 +147,19 @@ public class CouponDBDAO implements CouponDAO{
 		return null;
 	}
 
+	/**
+	 * This function uses the CouponRepo class to get coupons by a given type.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished.</br>
+	 */
 	@Override
-	public ArrayList<Coupon> getCouponsByType(CouponType type) 
+	public Collection<Coupon> getCouponsByType(CouponType type) 
 	{
 		SyncObject syncObject;
-		ArrayList<Coupon> couponsByType;
+		Collection<Coupon> couponsByType;
 		try 
 		{
 			syncObject = ConnectionPool.getInstance().getConnection();
-			couponsByType = (ArrayList<Coupon>) couponRepo.findCouponByType(type);
+			couponsByType = couponRepo.findCouponsByType(type);
 			ConnectionPool.getInstance().returnConnection(syncObject);
 			return couponsByType;
 		}
@@ -130,6 +170,12 @@ public class CouponDBDAO implements CouponDAO{
 		return null;
 	}
 	
+	/**
+	 * This function uses the CouponRepo class to get coupon by a given title.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished.</br>
+	 * @param title of the requested coupon. 
+	 * @return Coupon object with the requested coupon title.
+	 */
 	public Coupon getCouponByTitle(String title) 
 	{
 		SyncObject syncObject;
@@ -148,6 +194,12 @@ public class CouponDBDAO implements CouponDAO{
 		return null;
 	}
 	
+	/**
+	 * This function uses the CouponRepo class to check if coupon exists in the database by a given title.
+	 * <br>This function get a SyncObject from the Connection pool and return it when finished.</br>
+	 * @param title of the requested coupon. 
+	 * @return boolean which indicates whether the requested Coupon object exists in the database.
+	 */
 	public boolean couponExistsByTitle(String title)
 	{
 		SyncObject syncObject;
@@ -166,8 +218,14 @@ public class CouponDBDAO implements CouponDAO{
 		return false;
 	}
 	
-	public void deleteCouponByEndDate(Date endDate)
+	/**
+	 * This function uses the CouponRepo class to delete all expired Coupons objects from the database.
+	 * <br>An expired coupon is considered such if it's end date is before or equal to the given end date.</br>
+	 * This function bypass the get a SyncObject from the Connection pool mechanism mainly because it uses for the daily thread to delete expired coupons.
+	 * @param endDate is the expiration date limit of the coupons.
+	 */
+	public void deleteCouponsByEndDate(Date endDate)
 	{
-		couponRepo.deleteCouponByEndDate(endDate);
+		couponRepo.deleteCouponsByEndDate(endDate);
 	}
 }
