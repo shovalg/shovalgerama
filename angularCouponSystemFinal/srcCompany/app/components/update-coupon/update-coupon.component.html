@@ -1,0 +1,24 @@
+<body>
+  <form class="form-inline">
+      <h1> {{coupon.title}} </h1>
+      <br>
+      <br>
+      <div class="form-group" id="divId">
+        <label for="inputEndDate">End Date</label>
+        <input class="form-control" placeholder="Enter End Date"
+              [(ngModel)] = "coupon.end_date"
+                type="date" id="inputEndDate" name="end_date" />
+      </div>
+      <br>
+      <br>
+      <div class="form-group" id="divId">
+      <label for="inputPrice">Price</label>
+      <input class="form-control" placeholder="Enter Price"
+            [(ngModel)] = "coupon.price"
+              type="text" id="inputPrice" name="price" />
+      </div>
+      <br>
+      <br>
+      <button (click)="updateCoupon()"  routerLink="/get-all-coupons" class="btn btn-warning btn-lg"> Edit Coupon <span class="glyphicon glyphicon-plus"></span></button>
+    </form>
+</body>

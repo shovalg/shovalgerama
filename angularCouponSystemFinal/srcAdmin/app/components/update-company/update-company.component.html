@@ -1,0 +1,24 @@
+<body>
+    <form class="form-inline">
+            <h1> {{company.name}} </h1>
+            <br>
+            <br>
+            <div class="form-group" id=divId>
+                <label for="inputPassword">Password</label>
+                <input class="form-control" placeholder="Enter Password"
+                        [(ngModel)] = "company.password"
+                        type="password" id="inputPassword" name="password" />
+            </div>
+            <br>
+            <br>
+            <div class="form-group" id=divId>
+                <label for="inputEmail">Email</label>
+                <input class="form-control" placeholder="Enter Email"
+                        [(ngModel)] = "company.email"
+                        type="email" id="inputEmail" name="email" />
+            </div>
+            <br>
+            <br>
+            <button (click)="updateCompany()" class="btn btn-warning btn-lg" routerLink="/get-all-companies"> Edit Company <span class="glyphicon glyphicon-edit"></span></button>
+        </form>
+</body>

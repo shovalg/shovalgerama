@@ -1,0 +1,54 @@
+<body>
+  <form class="form-inline" ngNativeValidate>
+    <div class="form-group" id="divId">
+        <label for="inputTitle">Title</label>
+        <input class="form-control" placeholder="Enter Title"
+               [(ngModel)] = "coupon.title"
+                type="text" id="inputTitle" name="title" required>
+    </div>
+    <br>
+    <div class="form-group" id="divId">
+      <label for="inputEndDate">End Date</label>
+      <input class="form-control" placeholder="Enter End Date"
+             [(ngModel)] = "coupon.end_date"
+              type="date" id="inputEndDate" name="end_date" />
+    </div>
+    <br>
+    <div class="form-group" id="divId">
+    <label for="inputAmount">Amount</label>
+    <input class="form-control" placeholder="Enter Amount"
+           [(ngModel)] = "coupon.amount"
+            type="text" id="inputAmount" name="amount" />
+    </div>
+    <br>
+    <div class="form-group" id="divId">
+      <label for="inputType">Type</label>
+            <select name="type" [(ngModel)] = "coupon.type">
+              <option value="RESTURANTE">Resturante</option>
+              <option value="ELECTRICITY">Electricity</option>
+              <option value="FOOD">Food</option>
+              <option value="HEALTH">Health</option>
+              <option value="SPORTS">Sports</option>
+              <option value="CAMPING">Camping</option>
+              <option value="TRAVELLING">Travelling</option>
+            </select>
+    </div>
+    <br>
+    <div class="form-group" id="divId">
+    <label for="inputMessage">Message</label>
+    <input class="form-control" placeholder="Enter Message"
+           [(ngModel)] = "coupon.message"
+            type="text" id="inputMessage" name="message" />
+    </div>
+    <br>
+    <div class="form-group" id="divId">
+    <label for="inputPrice">Price</label>
+    <input class="form-control" placeholder="Enter Price"
+           [(ngModel)] = "coupon.price"
+            type="text" id="inputPrice" name="price" />
+    </div>
+    <br>
+    <button (click)="addCoupon()" class="btn btn-warning btn-lg"> Add coupon <span class="glyphicon glyphicon-plus"></span></button>
+  </form>
+  <img id="coupon_img" src="../../../assets/welcome/coupon.png" alt="coupon_img">
+</body>

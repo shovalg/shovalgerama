@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+		<meta charset="utf-8">
+    <title>Pure CSS3 Menu</title>
+		<link href="./assets/menu-bar/style.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="./assets/menu-bar/iconic.css" media="screen" rel="stylesheet" type="text/css" />
+		<script src="./assets/menu-bar/prefix-free.js"></script>
+	</head>
+
+<body>
+	<div class="wrap">
+	
+	<nav>
+		<ul class="menu">
+			<li><a href="#" routerLink="/purchase-coupon"><span class="iconic plus-alt"></span>Purchase Coupon</a></li>
+			<li><a href="#"><span class="iconic magnifying-glass"></span>Get Purchased Coupons</a>
+				<ul>
+					<li><a href="#" routerLink="/get-purchased-coupons-by-type">Coupons By Type</a></li>
+					<li><a href="#" routerLink="/get-purchased-coupons-by-price">Coupons By Top Price</a></li>
+					<li><a href="#" routerLink="/get-all-purchased-coupons">All Purchased Coupons</a></li>
+				</ul>
+			</li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">        
+			<li><a href="http://localhost:8080/index.html" id="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+		</ul>
+		<div class="clearfix"></div>
+	</nav>
+	</div>
+</body>
+
+</html>

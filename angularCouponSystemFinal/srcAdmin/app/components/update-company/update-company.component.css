@@ -1,0 +1,25 @@
+body{
+    background: url('../../../assets/welcome/update-picture.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    min-height: 100vh;
+}
+
+.form-inline{
+    max-width: 500px;
+    margin: 2rem auto;
+    border: 2px solid #E74C3C;
+    padding: 2rem;
+}
+
+#divId {
+    display: block;
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+}

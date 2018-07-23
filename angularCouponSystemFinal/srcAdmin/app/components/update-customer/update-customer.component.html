@@ -1,0 +1,16 @@
+<body>
+    <form class="form-inline">
+        <h1> {{customer.name}} </h1>
+        <br>
+        <br>
+        <div class="form-group" id=divId>
+            <label for="inputPassword">Password</label>
+            <input class="form-control" placeholder="Enter Password"
+                   [(ngModel)] = "customer.password"
+                    type="password" id="inputPassword" name="password" />
+        </div>
+        <br>
+        <br>
+        <button (click)="updateCustomer()" class="btn btn-warning btn-lg" routerLink="/get-all-customers"> Edit Customer <span class="glyphicon glyphicon-plus"></span></button>
+    </form>
+</body>

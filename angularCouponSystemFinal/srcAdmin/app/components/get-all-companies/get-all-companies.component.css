@@ -1,0 +1,20 @@
+.wrap {
+	width: 940px;
+	margin: auto;
+}
+th.color-change{
+    color: lavender;
+}
+td.color-change{
+    color: blue;
+}
+body {
+	background: url('../../../assets/welcome/get-all-companies.jpg');
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    min-height: 100vh;
+}

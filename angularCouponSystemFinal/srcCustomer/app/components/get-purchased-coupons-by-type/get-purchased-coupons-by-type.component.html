@@ -1,0 +1,47 @@
+<body>
+  <div class="form-group">
+      <label for="couponType">Select Coupon Type</label>
+        <select class="form-control" [(ngModel)] = "_selectedType"
+        type="text" id="inputUserType" name="type">
+            <option value="RESTURANTE">RESTURANTE</option>
+            <option value="ELECTRICITY">ELECTRICITY</option>
+            <option value="FOOD">FOOD</option>
+            <option value="HEALTH">HEALTH</option>
+            <option value="SPORTS">SPORTS</option>
+            <option value="CAMPING">CAMPING</option>
+            <option value="TRAVELLING">TRAVELLING</option>
+        </select>      
+    </div>
+  <div class="wrap">
+  <br>
+  <table style="margin-left: 10px" class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th class="color-change">Id</th>
+            <th class="color-change">Title</th>
+            <th class="color-change">Start date</th>
+            <th class="color-change">End date</th>
+            <th class="color-change">Amount</th>
+            <th class="color-change">Type</th>
+            <th class="color-change">Message</th>
+            <th class="color-change">Price</th>
+            <th class="color-change">Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let coupon of _couponsByType">
+            <td class="color-change">{{coupon.id}}</td>
+            <td class="color-change">{{coupon.title}}</td>
+            <td class="color-change">{{coupon.start_date | date : "dd/MM/yyyy"}}</td>
+            <td class="color-change">{{coupon.end_date | date : "dd/MM/yyyy"}}</td>
+            <td class="color-change">{{coupon.amount}}</td>
+            <td class="color-change">{{coupon.type}}</td>
+            <td class="color-change">{{coupon.message}}</td>
+            <td class="color-change">{{coupon.price | currency : "ILS"}}</td>
+            <td class="color-change"><img src="{{coupon.image}}"></td>
+        </tr>
+    </tbody>
+  </table>
+  <button (click)="getPurchasedCouponsByType()" class="btn btn-warning btn-lg"> Coupons By Type <span class="glyphicon glyphicon-upload"></span></button>
+  </div>
+  </body>

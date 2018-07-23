@@ -1,0 +1,29 @@
+.wrap {
+	width: 940px;
+	margin: auto;
+}
+th.color-change{
+    color: black;
+    font: bold;
+    background-color: wheat;
+}
+td.color-change{
+    color: black;
+    background-color:whitesmoke;
+}
+body {
+	background: url('../../../assets/welcome/get-all-coupons.jpg');
+	background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    min-height: 100vh;
+}
+img{
+    margin-top: 0.1cm;
+    margin-bottom: 0.1cm;
+    width: 150px;
+    height: 90px;
+}

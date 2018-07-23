@@ -1,0 +1,22 @@
+<body>
+<div class="wrap">
+<br>
+<form style="margin-left: 20px" class="form-inline" ngNativeValidate>
+  <div class="form-group">
+      <label for="inputUserName">Username</label>
+      <input class="form-control" placeholder="Enter Username"
+             [(ngModel)] = "customer.name"
+              type="text" id="inputUserName" name="name" required/>
+  </div>
+  <div class="form-group">
+      <label for="inputPassword">Password</label>
+      <input class="form-control" placeholder="Enter Password"
+             [(ngModel)] = "customer.password"
+              type="password" id="inputPassword" name="password" required/>
+  </div>
+<br>
+<br>
+  <button (click)="addCustomer()" class="btn btn-warning btn-lg"> Add customer <span class="glyphicon glyphicon-plus"></span></button>
+</form>
+</div>
+</body>
